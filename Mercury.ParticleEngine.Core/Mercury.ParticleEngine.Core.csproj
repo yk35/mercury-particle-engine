@@ -35,9 +35,19 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SharpDX, Version=2.5.0.0, Culture=neutral, PublicKeyToken=627a3d6d1956f55a, processorArchitecture=MSIL">
+      <HintPath>..\.lib\SharpDX.2.5.0\lib\net40\SharpDX.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D9, Version=2.5.0.0, Culture=neutral, PublicKeyToken=627a3d6d1956f55a, processorArchitecture=MSIL">
+      <HintPath>..\.lib\SharpDX.Direct3D9.2.5.0\lib\net40\SharpDX.Direct3D9.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Axis.cs" />
