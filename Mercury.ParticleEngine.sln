@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.21730.1
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercury.ParticleEngine.Core", "Mercury.ParticleEngine.Core\Mercury.ParticleEngine.Core.csproj", "{E7B59AF1-5CCF-472B-906A-62BF48E520A8}"
 EndProject
@@ -10,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercury.ParticleEngine.SharpDX.Direct3D9", "Mercury.ParticleEngine.SharpDX.Direct3D9\Mercury.ParticleEngine.SharpDX.Direct3D9.csproj", "{ACA557D3-43A9-424F-A35A-4FB9C93FE4E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercury.ParticleEngine.SharpDX.Direct3D9.Sample", "Mercury.ParticleEngine.SharpDX.Direct3D9.Sample\Mercury.ParticleEngine.SharpDX.Direct3D9.Sample.csproj", "{A80CE58A-40BF-4766-89D2-3E81C5D9BC63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercury.ParticleEngine.SlimDX.Direct3D9", "Mercury.ParticleEngine.SlimDX.Direct3D9\Mercury.ParticleEngine.SlimDX.Direct3D9.csproj", "{EBB75343-127F-4A4F-BBA8-597D692207E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercury.ParticleEngine.SlimDX.Direct3D9.Sample", "Mercury.ParticleEngine.SlimDX.Direct3D9.Sample\Mercury.ParticleEngine.SlimDX.Direct3D9.Sample.csproj", "{6B6D0FE6-2E24-4C36-9FA3-8D4B8B72689C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{A80CE58A-40BF-4766-89D2-3E81C5D9BC63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A80CE58A-40BF-4766-89D2-3E81C5D9BC63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A80CE58A-40BF-4766-89D2-3E81C5D9BC63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBB75343-127F-4A4F-BBA8-597D692207E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBB75343-127F-4A4F-BBA8-597D692207E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBB75343-127F-4A4F-BBA8-597D692207E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBB75343-127F-4A4F-BBA8-597D692207E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B6D0FE6-2E24-4C36-9FA3-8D4B8B72689C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B6D0FE6-2E24-4C36-9FA3-8D4B8B72689C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B6D0FE6-2E24-4C36-9FA3-8D4B8B72689C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B6D0FE6-2E24-4C36-9FA3-8D4B8B72689C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
