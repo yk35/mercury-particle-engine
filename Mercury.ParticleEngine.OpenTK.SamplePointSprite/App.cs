@@ -16,7 +16,8 @@ namespace Mercury.ParticleEngine {
         }
 
         ParticleEffect _effect;
-        QuadRenderer _renderer;
+        //QuadRenderer _renderer;
+        private GLPointSpriteRenderer _renderer;
         Coordinate _mousePosition;
         Coordinate _previousMousePosition;
 
@@ -80,7 +81,9 @@ namespace Mercury.ParticleEngine {
                 { "Cloud", LoadTexture("Cloud001.png") }
             };
 
-            _renderer = new QuadRenderer(textureLookup);
+            //_renderer = new QuadRenderer(textureLookup);
+            _renderer = new GLPointSpriteRenderer(textureLookup, 1000000);
+            _renderer.ProjectionMatrix = Matrix4.CreateOrthographicOffCenter(0, 1024, 768, 0, 0, 1);
         }
 
         static int LoadTexture(string filePath) {
@@ -119,7 +122,7 @@ namespace Mercury.ParticleEngine {
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            _renderer.Render(_effect.Emitters[0], Matrix4.Identity);
+            _renderer.Render(_effect, Matrix4.Identity);
 
             GL.Flush();
 

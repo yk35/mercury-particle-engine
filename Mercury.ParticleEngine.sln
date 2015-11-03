@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.21730.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercury.ParticleEngine.Core", "Mercury.ParticleEngine.Core\Mercury.ParticleEngine.Core.csproj", "{E7B59AF1-5CCF-472B-906A-62BF48E520A8}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercury.ParticleEngine.OpenTK", "Mercury.ParticleEngine.OpenTK\Mercury.ParticleEngine.OpenTK.csproj", "{D9EBF3A0-0A3B-415F-B783-B99D55B16DEA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercury.ParticleEngine.OpenTK.Sample", "Mercury.ParticleEngine.OpenTK.Sample\Mercury.ParticleEngine.OpenTK.Sample.csproj", "{B0777715-38F2-4545-A269-CD67A2481E26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercury.ParticleEngine.OpenTK.SamplePointSprite", "Mercury.ParticleEngine.OpenTK.SamplePointSprite\Mercury.ParticleEngine.OpenTK.SamplePointSprite.csproj", "{70B2533E-129C-446F-B8B9-B05DA5021A8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{B0777715-38F2-4545-A269-CD67A2481E26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0777715-38F2-4545-A269-CD67A2481E26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0777715-38F2-4545-A269-CD67A2481E26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70B2533E-129C-446F-B8B9-B05DA5021A8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70B2533E-129C-446F-B8B9-B05DA5021A8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70B2533E-129C-446F-B8B9-B05DA5021A8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70B2533E-129C-446F-B8B9-B05DA5021A8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

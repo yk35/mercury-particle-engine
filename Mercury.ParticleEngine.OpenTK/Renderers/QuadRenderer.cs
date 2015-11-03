@@ -1,10 +1,10 @@
-﻿namespace Mercury.ParticleEngine.Renderers {
-    using System;
-    using System.Collections.Generic;
-    using OpenTK;
-    using OpenTK.Graphics;
-    using OpenTK.Graphics.OpenGL;
+﻿using System;
+using System.Collections.Generic;
+using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 
+namespace Mercury.ParticleEngine.Renderers {
     public class QuadRenderer : IDisposable {
         private readonly IReadOnlyDictionary<String, Int32> _textureIndexLookup;
         private readonly int _vertexBufferId;
