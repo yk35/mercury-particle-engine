@@ -11,6 +11,6 @@ void main()
 	
 	vec2 texCoord = rotationMatrix * (gl_PointCoord.xy - vec2(0.5f, 0.5f)) + vec2(0.5f, 0.5f);
 	
-    gl_FragColor = texture(tex, gl_PointCoord) * outColor;
+    gl_FragColor = texture(tex, texCoord) * outColor;
 }
 
