@@ -1,6 +1,5 @@
 #version 330
-uniform mat4 ModelViewMatrix;
-uniform mat4 ProjectionMatrix;
+uniform mat4 MVPMatrix;
 uniform int FastFade;
 in vec3 Colour;
 in vec2 Position;
@@ -41,6 +40,5 @@ void main()
 	rotation = Rotation;
 
 	gl_PointSize = Scale;
-	vec4 inWorldPos = ModelViewMatrix * vec4(Position, 0, 1);
-	gl_Position = ProjectionMatrix * inWorldPos;
+	gl_Position = MVPMatrix * vec4(Position, 0, 1);
 }

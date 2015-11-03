@@ -71,12 +71,11 @@ namespace Mercury.ParticleEngine.Renderers
         {
             ErrorCode e;
             GL.UseProgram(_progId);
-            var projMat = ProjectionMatrix;
-            GL.UniformMatrix4(GL.GetUniformLocation(_progId, "ProjectionMatrix"), false, ref projMat);
             GL.Enable(EnableCap.PointSprite);
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.VertexProgramPointSize);
             GL.Disable(EnableCap.DepthTest);
+            GL.DepthMask(false);
             GL.Enable(EnableCap.Texture2D);
             for (var i = 0; i < effect.Emitters.Length; i++)
             {
@@ -87,7 +86,7 @@ namespace Mercury.ParticleEngine.Renderers
         internal void Render(Emitter emitter, Matrix4 worldViewProjection)
         {
             ErrorCode e;
-            GL.UniformMatrix4(GL.GetUniformLocation(_progId, "ModelViewMatrix"), false, ref worldViewProjection);
+            GL.UniformMatrix4(GL.GetUniformLocation(_progId, "MVPMatrix"), false, ref worldViewProjection);
             GL.Uniform1(GL.GetUniformLocation(_progId, "tex"), 0);
             GL.Uniform1(GL.GetUniformLocation(_progId, "FastFade"), FastFade ? 1: 0);
             GL.BindTexture(TextureTarget.Texture2D, _textureIndexLookup[emitter.TextureKey]);

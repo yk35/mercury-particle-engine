@@ -83,7 +83,6 @@ namespace Mercury.ParticleEngine {
 
             //_renderer = new QuadRenderer(textureLookup);
             _renderer = new GLPointSpriteRenderer(textureLookup, 1000000);
-            _renderer.ProjectionMatrix = Matrix4.CreateOrthographicOffCenter(0, 1024, 768, 0, 0, 1);
         }
 
         static int LoadTexture(string filePath) {
@@ -122,7 +121,7 @@ namespace Mercury.ParticleEngine {
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            _renderer.Render(_effect, Matrix4.Identity);
+            _renderer.Render(_effect, Matrix4.CreateOrthographicOffCenter(0, 1024, 768, 0, 0, 1) * Matrix4.Identity);
 
             GL.Flush();
 
