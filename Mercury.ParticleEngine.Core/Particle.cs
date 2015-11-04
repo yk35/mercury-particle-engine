@@ -13,6 +13,8 @@
         public float Rotation;
         public float Mass;
 
+        public float LifeTime;
+
         static public readonly int SizeInBytes = Marshal.SizeOf(typeof(Particle));
     }
 }

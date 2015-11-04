@@ -43,6 +43,16 @@
             return numToRelease;
         }
 
+        public unsafe void Remove(Particle* particle)
+        {
+            _tail -= 1;
+            var lastParticle = (Particle*)IntPtr.Add(NativePointer, _tail * Particle.SizeInBytes);
+            if (lastParticle != particle)
+            {
+                *particle = *lastParticle;
+            }
+        }
+
         public void Reclaim(int number) {
             _tail -= number;
 

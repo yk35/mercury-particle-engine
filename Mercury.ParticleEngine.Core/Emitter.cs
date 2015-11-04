@@ -45,14 +45,17 @@
             var expired = 0;
 
             while (count-- > 0) {
-                if ((_totalSeconds - particle->Inception) < _term)
-                    break;
-
-                expired++;
-                particle++;
+                if ((_totalSeconds - particle->Inception) > particle->LifeTime)
+                {
+                    Buffer.Remove(particle);
+                }
+                else
+                {
+                    particle++;
+                }
             }
 
-            Buffer.Reclaim(expired);
+//            Buffer.Reclaim(expired);
         }
 
         public void Update(float elapsedSeconds) {
@@ -72,7 +75,7 @@
                 var count = Buffer.Count;
 
                 while (count-- > 0) {
-                    particle->Age = (_totalSeconds - particle->Inception) / _term;
+                    particle->Age = particle->LifeTime <= 0 ? 1 : Math.Min((_totalSeconds - particle->Inception) / particle->LifeTime, 1);
 
                     particle->Position[0] += particle->Velocity[0] * elapsedSeconds;
                     particle->Position[1] += particle->Velocity[1] * elapsedSeconds;
@@ -109,7 +112,7 @@
 
                 particle->Age = 0f;
                 particle->Inception = _totalSeconds;
-
+                particle->LifeTime = _term;
                 particle->Position[0] += position._x;
                 particle->Position[1] += position._y;
 
