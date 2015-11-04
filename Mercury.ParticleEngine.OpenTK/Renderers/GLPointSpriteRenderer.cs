@@ -40,6 +40,11 @@ namespace Mercury.ParticleEngine.Renderers
 
         public bool FastFade { get; set; }
 
+        /// <summary>
+        /// per pixel size in unit of world
+        /// </summary>
+        public float PixelPerWorld { get; set; }
+
         public GLPointSpriteRenderer(IReadOnlyDictionary<String, Int32> textureIndexLookup, int size)
         {
             if (textureIndexLookup == null)
@@ -49,6 +54,7 @@ namespace Mercury.ParticleEngine.Renderers
             _textureIndexLookup = textureIndexLookup;
             ProjectionMatrix = Matrix4.Identity;
             FastFade = false;
+            PixelPerWorld = 1.0f;
 
             _vertexBufferId = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferId);
@@ -87,8 +93,9 @@ namespace Mercury.ParticleEngine.Renderers
         {
             ErrorCode e;
             GL.UniformMatrix4(GL.GetUniformLocation(_progId, "MVPMatrix"), false, ref worldViewProjection);
+            GL.Uniform1(GL.GetUniformLocation(_progId, "FastFade"), FastFade ? 1 : 0);
             GL.Uniform1(GL.GetUniformLocation(_progId, "tex"), 0);
-            GL.Uniform1(GL.GetUniformLocation(_progId, "FastFade"), FastFade ? 1: 0);
+            GL.Uniform1(GL.GetUniformLocation(_progId, "PixelPerWorld"), PixelPerWorld);
             GL.BindTexture(TextureTarget.Texture2D, _textureIndexLookup[emitter.TextureKey]);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);

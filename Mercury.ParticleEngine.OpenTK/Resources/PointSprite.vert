@@ -1,6 +1,7 @@
 #version 330
 uniform mat4 MVPMatrix;
 uniform int FastFade;
+uniform float PixelPerWorld;
 in vec3 Colour;
 in vec2 Position;
 in float Rotation;
@@ -39,6 +40,6 @@ void main()
 
 	rotation = Rotation;
 
-	gl_PointSize = Scale;
+	gl_PointSize = Scale * PixelPerWorld;
 	gl_Position = MVPMatrix * vec4(Position, 0, 1);
 }
