@@ -10,7 +10,11 @@
 
             _term = (float)term.TotalSeconds;
 
-            Buffer                    = new ParticleBuffer(capacity);
+            _buffers = new ParticleBuffer[2]
+            {
+                new ParticleBuffer(capacity), 
+                new ParticleBuffer(capacity)
+            };
             Profile                   = profile;
             Modifiers                 = new Modifier[0];
             ModifierExecutionStrategy = ModifierExecutionStrategy.Serial;
@@ -20,8 +24,14 @@
 
         private readonly float _term;
         private float _totalSeconds;
+        private ParticleBuffer[] _buffers;
+        private int _activeBuffer = 0;
 
-        internal readonly ParticleBuffer Buffer;
+
+        internal ParticleBuffer Buffer
+        {
+            get { return _buffers[_activeBuffer]; }
+        }
 
         public int ActiveParticles {
             get { return Buffer.Count; }
@@ -44,16 +54,19 @@
 
             var expired = 0;
 
+            var destBuffer = _buffers[(_activeBuffer + 1)%2];
+            destBuffer.Reset();
+
             while (count-- > 0) {
-                if ((_totalSeconds - particle->Inception) > particle->LifeTime)
+                if ((_totalSeconds - particle->Inception) <= particle->LifeTime)
                 {
-                    Buffer.Remove(particle);
+                    Particle* destParticle;
+                    destBuffer.Release(1, out destParticle);
+                    *destParticle = *particle;
                 }
-                else
-                {
-                    particle++;
-                }
+                particle++;
             }
+            _activeBuffer = (_activeBuffer + 1)%2;
 
 //            Buffer.Reclaim(expired);
         }
@@ -133,7 +146,10 @@
         }
 
         public void Dispose() {
-            Buffer.Dispose();
+            foreach (var b in _buffers)
+            {
+                b.Dispose();
+            }
             GC.SuppressFinalize(this);
         }
 

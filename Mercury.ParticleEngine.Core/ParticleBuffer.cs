@@ -23,6 +23,11 @@
             get { return _tail; }
         }
 
+        public void Reset()
+        {
+            _tail = 0;
+        }
+
         public int SizeInBytes {
             get { return Particle.SizeInBytes * Size; }
         }
@@ -41,16 +46,6 @@
             first = (Particle*)IntPtr.Add(NativePointer, oldTail * Particle.SizeInBytes);
 
             return numToRelease;
-        }
-
-        public unsafe void Remove(Particle* particle)
-        {
-            _tail -= 1;
-            var lastParticle = (Particle*)IntPtr.Add(NativePointer, _tail * Particle.SizeInBytes);
-            if (lastParticle != particle)
-            {
-                *particle = *lastParticle;
-            }
         }
 
         public void Reclaim(int number) {
