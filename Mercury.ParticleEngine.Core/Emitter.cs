@@ -61,8 +61,10 @@
                 if ((_totalSeconds - particle->Inception) <= particle->LifeTime)
                 {
                     Particle* destParticle;
-                    destBuffer.Release(1, out destParticle);
-                    *destParticle = *particle;
+                    if (destBuffer.Release(1, out destParticle) == 1)
+                    {
+                        *destParticle = *particle;
+                    }
                 }
                 particle++;
             }
