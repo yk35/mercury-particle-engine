@@ -17,13 +17,15 @@ namespace Mercury.ParticleEngine.Renderers
     /// </summary>
     public class GLPointSpriteRenderer : IDisposable
     {
-        private readonly IReadOnlyDictionary<String, Int32> _textureIndexLookup;
-        private readonly int _vertexBufferId;
-
-        private readonly int _progId;
-
         private readonly int _size;
 
+        #region OpenTK Resources
+        private readonly IReadOnlyDictionary<String, Int32> _textureIndexLookup;
+        private readonly int _vertexBufferId;
+        private readonly int _progId;
+        #endregion
+
+        #region attribute location
         private int _posLoc;
 
         private int _ageLoc;
@@ -35,8 +37,7 @@ namespace Mercury.ParticleEngine.Renderers
         private int _colLoc;
 
         private int _opacityLoc;
-
-        public Matrix4 ProjectionMatrix { get; set; }
+        #endregion
 
         public bool FastFade { get; set; }
 
@@ -52,17 +53,14 @@ namespace Mercury.ParticleEngine.Renderers
 
             _size = size;
             _textureIndexLookup = textureIndexLookup;
-            ProjectionMatrix = Matrix4.Identity;
             FastFade = false;
             PixelPerWorld = 1.0f;
+
+            _progId = LoadShaderProgram(ResourcesGL.PointSpriteVertShader, ResourcesGL.PointSpriteFragShader);
 
             _vertexBufferId = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferId);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_size * Particle.SizeInBytes), IntPtr.Zero, BufferUsageHint.StreamDraw);
-            ErrorCode e;
-            e = GL.GetError();
-
-            _progId = LoadShaderProgram(ResourcesGL.PointSpriteVertShader, ResourcesGL.PointSpriteFragShader);
 
             _posLoc = GL.GetAttribLocation(_progId, "Position");
             _colLoc = GL.GetAttribLocation(_progId, "Colour");
