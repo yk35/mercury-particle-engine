@@ -27,6 +27,8 @@
         private ParticleBuffer[] _buffers;
         private int _activeBuffer = 0;
 
+        private uint _latestId = 0;
+
 
         internal ParticleBuffer Buffer
         {
@@ -45,6 +47,9 @@
         public RenderingOrder RenderingOrder { get; set; }
         public String TextureKey { get; set; }
 
+        public event EventHandler<Particle> ParticleAdded;
+        public event EventHandler<Particle> ParticleRemoved;
+
         public float ReclaimFrequency { get; set; }
         private float _secondsSinceLastReclaim;
 
@@ -57,6 +62,7 @@
             var destBuffer = _buffers[(_activeBuffer + 1)%2];
             destBuffer.Reset();
 
+            var particleRemoved = ParticleRemoved;
             while (count-- > 0) {
                 if ((_totalSeconds - particle->Inception) <= particle->LifeTime)
                 {
@@ -64,6 +70,14 @@
                     if (destBuffer.Release(1, out destParticle) == 1)
                     {
                         *destParticle = *particle;
+                    }
+                }
+                else
+                {
+                    // performance?
+                    if (particleRemoved != null)
+                    {
+                        particleRemoved(this, *particle);
                     }
                 }
                 particle++;
@@ -121,8 +135,10 @@
         private void Release(Coordinate position, int numToRelease) {
             Particle* particle;
             var count = Buffer.Release(numToRelease, out particle);
-
-            while (count-- > 0) {
+            var particleAdded = ParticleAdded;
+            while (count-- > 0)
+            {
+                particle->Id = _latestId++;
                 Profile.GetOffsetAndHeading((Coordinate*)particle->Position, (Axis*)particle->Velocity);
 
                 particle->Age = 0f;
@@ -142,6 +158,12 @@
                 particle->Scale    = FastRand.NextSingle(Parameters.Scale);
                 particle->Rotation = FastRand.NextSingle(Parameters.Rotation);
                 particle->Mass     = FastRand.NextSingle(Parameters.Mass);
+
+                // performance?
+                if (particleAdded != null)
+                {
+                    particleAdded(this, *particle);
+                }
 
                 particle++;
             }
