@@ -39,6 +39,9 @@ namespace Mercury.ParticleEngine.Renderers
         private int _opacityLoc;
         #endregion
 
+        /// <summary>
+        /// Gets or sets a value indicating whether fast fade.
+        /// </summary>
         public bool FastFade { get; set; }
 
         /// <summary>
@@ -46,6 +49,17 @@ namespace Mercury.ParticleEngine.Renderers
         /// </summary>
         public float PixelPerWorld { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GLPointSpriteRenderer"/> class.
+        /// </summary>
+        /// <param name="textureIndexLookup">
+        /// The texture index lookup.
+        /// </param>
+        /// <param name="size">
+        /// The size.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// </exception>
         public GLPointSpriteRenderer(IReadOnlyDictionary<String, Int32> textureIndexLookup, int size)
         {
             if (textureIndexLookup == null)
@@ -70,7 +84,15 @@ namespace Mercury.ParticleEngine.Renderers
             _opacityLoc = GL.GetAttribLocation(_progId, "Opacity");
         }
 
-
+        /// <summary>
+        /// The render.
+        /// </summary>
+        /// <param name="effect">
+        /// The effect.
+        /// </param>
+        /// <param name="worldViewProjection">
+        /// The world view projection.
+        /// </param>
         public void Render(ParticleEffect effect, Matrix4 worldViewProjection)
         {
             ErrorCode e;
@@ -87,6 +109,16 @@ namespace Mercury.ParticleEngine.Renderers
             }
             GL.UseProgram(0);
         }
+
+        /// <summary>
+        /// The render.
+        /// </summary>
+        /// <param name="emitter">
+        /// The emitter.
+        /// </param>
+        /// <param name="worldViewProjection">
+        /// The world view projection.
+        /// </param>
         internal void Render(Emitter emitter, Matrix4 worldViewProjection)
         {
             ErrorCode e;
@@ -134,6 +166,20 @@ namespace Mercury.ParticleEngine.Renderers
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
 
+        /// <summary>
+        /// The load shader program.
+        /// </summary>
+        /// <param name="vert">
+        /// The vert.
+        /// </param>
+        /// <param name="frag">
+        /// The frag.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        /// <exception cref="Exception">
+        /// </exception>
         static int LoadShaderProgram(byte[] vert, byte[] frag)
         {
             var vertId = GL.CreateShader(ShaderType.VertexShader);
@@ -165,6 +211,13 @@ namespace Mercury.ParticleEngine.Renderers
                 throw new Exception(info);
             }
         }
+
+        /// <summary>
+        /// The setup blend.
+        /// </summary>
+        /// <param name="blendMode">
+        /// The blend mode.
+        /// </param>
         static void SetupBlend(BlendMode blendMode)
         {
             switch (blendMode)
@@ -190,12 +243,22 @@ namespace Mercury.ParticleEngine.Renderers
                     }
             }
         }
+
+        /// <summary>
+        /// The dispose.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// The dispose.
+        /// </summary>
+        /// <param name="disposing">
+        /// The disposing.
+        /// </param>
         protected void Dispose(bool disposing)
         {
             if (disposing)
@@ -205,6 +268,9 @@ namespace Mercury.ParticleEngine.Renderers
             }
         }
 
+        /// <summary>
+        /// Finalizes an instance of the <see cref="GLPointSpriteRenderer"/> class. 
+        /// </summary>
         ~GLPointSpriteRenderer()
         {
             Dispose(false);
