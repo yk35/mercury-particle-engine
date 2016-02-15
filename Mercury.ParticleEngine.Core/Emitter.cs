@@ -39,6 +39,11 @@
             get { return Buffer.Count; }
         }
 
+        public void ResetParticles()
+        {
+            Buffer.Reset();
+        }
+
         public Modifier[] Modifiers { get; set; }
         public ModifierExecutionStrategy ModifierExecutionStrategy { get; set; }
         public Profile Profile { get; private set; }

@@ -26,7 +26,7 @@ namespace Mercury.ParticleEngine.Renderers {
 
             SetupBlend(emitter.BlendMode);
 
-            GL.Begin(PrimitiveType.Quads);
+            GL.Begin(BeginMode.Quads);
 
             unsafe {
                 switch (emitter.RenderingOrder) {

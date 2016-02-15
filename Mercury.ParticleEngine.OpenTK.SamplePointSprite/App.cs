@@ -32,15 +32,15 @@ namespace Mercury.ParticleEngine {
 
             _effect = new ParticleEffect {
                 Emitters = new[] {
-                    new Emitter(2000, TimeSpan.FromSeconds(3), Profile.Point()) {
+                    new Emitter(2000, TimeSpan.FromSeconds(2), Profile.Point()) {
                         Parameters = new ReleaseParameters {
                             Colour   = new Colour(0f, 0f, 0.6f),
                             Opacity  = 1f,
                             Quantity = 5,
-                            Speed    = new RangeF(0f, 100f),
-                            Scale    = 32f,
+                            Speed    = new RangeF(0f, 20f),
+                            Scale    = 4f,
                             Rotation = new RangeF((float)-Math.PI, (float)Math.PI),
-                            Mass     = new RangeF(8f, 12f)
+                            Mass     = 0,
                         },
                         ReclaimFrequency = 5f,
                         BlendMode = BlendMode.Alpha,
@@ -72,6 +72,7 @@ namespace Mercury.ParticleEngine {
             };
 
             GL.ClearColor(Color4.Black);
+            GL.ClearColor(0, 0, 0, 0);
             GL.Ortho(0, 1024, 768, 0, 0, 1);
             GL.Viewport(0, 0, 1024, 768);
 

@@ -70,6 +70,101 @@ namespace Mercury.ParticleEngine.Renderers
             _opacityLoc = GL.GetAttribLocation(_progId, "Opacity");
         }
 
+        public void Render(IEnumerable<ParticleEffect> effects, Matrix4 worldViewProjection, string textureKey, BlendMode blendMode)
+        {
+            ErrorCode e;
+            GL.UseProgram(_progId);
+            GL.Enable(EnableCap.PointSprite);
+            GL.Enable(EnableCap.Blend);
+            GL.Enable(EnableCap.VertexProgramPointSize);
+            GL.Disable(EnableCap.DepthTest);
+            GL.DepthMask(false);
+            GL.Enable(EnableCap.Texture2D);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferId);
+            GL.UniformMatrix4(GL.GetUniformLocation(_progId, "MVPMatrix"), false, ref worldViewProjection);
+            GL.Uniform1(GL.GetUniformLocation(_progId, "FastFade"), FastFade ? 1 : 0);
+            GL.Uniform1(GL.GetUniformLocation(_progId, "tex"), 0);
+            GL.Uniform1(GL.GetUniformLocation(_progId, "PixelPerWorld"), PixelPerWorld);
+            GL.BindTexture(TextureTarget.Texture2D, _textureIndexLookup[textureKey]);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Clamp);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Clamp);
+            var vertexDataPointer = GL.MapBuffer(BufferTarget.ArrayBuffer, BufferAccess.WriteOnly);
+            int totalActiveParticles = 0;
+            foreach (var effect in effects)
+            {
+                for (var i = 0; i < effect.Emitters.Length; i++)
+                {
+                    RenderImpl(effect.Emitters[i], vertexDataPointer, totalActiveParticles);
+                    totalActiveParticles += effect.Emitters[i].ActiveParticles;
+                }
+            }
+
+            GL.UnmapBuffer(BufferTarget.ArrayBuffer);
+
+            GL.EnableVertexAttribArray(_ageLoc);
+            GL.VertexAttribPointer(_ageLoc, 1, VertexAttribPointerType.Float, false, Particle.SizeInBytes, Marshal.OffsetOf(typeof(Particle), "Age"));
+            GL.EnableVertexAttribArray(_posLoc);
+            GL.VertexAttribPointer(_posLoc, 2, VertexAttribPointerType.Float, false, Particle.SizeInBytes, Marshal.OffsetOf(typeof(Particle), "Position"));
+            GL.EnableVertexAttribArray(_colLoc);
+            GL.VertexAttribPointer(_colLoc, 3, VertexAttribPointerType.Float, false, Particle.SizeInBytes, Marshal.OffsetOf(typeof(Particle), "Colour"));
+            GL.EnableVertexAttribArray(_scaleLoc);
+            GL.VertexAttribPointer(_scaleLoc, 1, VertexAttribPointerType.Float, false, Particle.SizeInBytes, Marshal.OffsetOf(typeof(Particle), "Scale"));
+            GL.EnableVertexAttribArray(_rotationLoc);
+            GL.VertexAttribPointer(_rotationLoc, 1, VertexAttribPointerType.Float, false, Particle.SizeInBytes, Marshal.OffsetOf(typeof(Particle), "Rotation"));
+            GL.EnableVertexAttribArray(_opacityLoc);
+            GL.VertexAttribPointer(_opacityLoc, 1, VertexAttribPointerType.Float, false, Particle.SizeInBytes, Marshal.OffsetOf(typeof(Particle), "Opacity"));
+            SetupBlend(blendMode);
+            GL.DrawArrays(BeginMode.Points, 0, totalActiveParticles);
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            GL.UseProgram(0);
+        }
+
+        private void RenderImpl(Emitter emitter, IntPtr vertexDataPointer, int offsetPartlceCount)
+        {
+            switch (emitter.RenderingOrder)
+            {
+                case RenderingOrder.FrontToBack:
+                    {
+                        emitter.Buffer.CopyTo(IntPtr.Add(vertexDataPointer, Particle.SizeInBytes*offsetPartlceCount));
+                        break;
+                    }
+                case RenderingOrder.BackToFront:
+                    {
+                        emitter.Buffer.CopyToReverse(IntPtr.Add(vertexDataPointer, Particle.SizeInBytes * offsetPartlceCount));
+                        break;
+                    }
+            }
+        }
+
+
+        public void Render(IEnumerable<ParticleEffect> effects, Matrix4 worldViewProjection)
+        {
+            ErrorCode e;
+            GL.UseProgram(_progId);
+            GL.Enable(EnableCap.PointSprite);
+            GL.Enable(EnableCap.Blend);
+            GL.Enable(EnableCap.VertexProgramPointSize);
+            GL.Disable(EnableCap.DepthTest);
+            GL.DepthMask(false);
+            GL.Enable(EnableCap.Texture2D);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferId);
+            GL.UniformMatrix4(GL.GetUniformLocation(_progId, "MVPMatrix"), false, ref worldViewProjection);
+            GL.Uniform1(GL.GetUniformLocation(_progId, "FastFade"), FastFade ? 1 : 0);
+            GL.Uniform1(GL.GetUniformLocation(_progId, "tex"), 0);
+            GL.Uniform1(GL.GetUniformLocation(_progId, "PixelPerWorld"), PixelPerWorld);
+            foreach (var effect in effects)
+            {
+                for (var i = 0; i < effect.Emitters.Length; i++)
+                {
+                    Render(effect.Emitters[i]);
+                }
+            }
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            GL.UseProgram(0);
+        }
 
         public void Render(ParticleEffect effect, Matrix4 worldViewProjection)
         {
@@ -81,25 +176,26 @@ namespace Mercury.ParticleEngine.Renderers
             GL.Disable(EnableCap.DepthTest);
             GL.DepthMask(false);
             GL.Enable(EnableCap.Texture2D);
-            for (var i = 0; i < effect.Emitters.Length; i++)
-            {
-                Render(effect.Emitters[i], worldViewProjection);
-            }
-            GL.UseProgram(0);
-        }
-        internal void Render(Emitter emitter, Matrix4 worldViewProjection)
-        {
-            ErrorCode e;
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferId);
             GL.UniformMatrix4(GL.GetUniformLocation(_progId, "MVPMatrix"), false, ref worldViewProjection);
             GL.Uniform1(GL.GetUniformLocation(_progId, "FastFade"), FastFade ? 1 : 0);
             GL.Uniform1(GL.GetUniformLocation(_progId, "tex"), 0);
             GL.Uniform1(GL.GetUniformLocation(_progId, "PixelPerWorld"), PixelPerWorld);
+            for (var i = 0; i < effect.Emitters.Length; i++)
+            {
+                Render(effect.Emitters[i]);
+            }
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            GL.UseProgram(0);
+        }
+        internal void Render(Emitter emitter)
+        {
+            ErrorCode e;
             GL.BindTexture(TextureTarget.Texture2D, _textureIndexLookup[emitter.TextureKey]);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Clamp);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Clamp);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferId);
             var vertexDataPointer = GL.MapBuffer(BufferTarget.ArrayBuffer, BufferAccess.WriteOnly);
 
             switch (emitter.RenderingOrder)
@@ -130,8 +226,7 @@ namespace Mercury.ParticleEngine.Renderers
             GL.EnableVertexAttribArray(_opacityLoc);
             GL.VertexAttribPointer(_opacityLoc, 1, VertexAttribPointerType.Float, false, Particle.SizeInBytes, Marshal.OffsetOf(typeof(Particle), "Opacity"));
             SetupBlend(emitter.BlendMode);
-            GL.DrawArrays(PrimitiveType.Points, 0, emitter.ActiveParticles);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            GL.DrawArrays(BeginMode.Points, 0, emitter.ActiveParticles);
         }
 
         static int LoadShaderProgram(byte[] vert, byte[] frag)
